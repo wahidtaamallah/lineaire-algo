@@ -1,9 +1,12 @@
-ALGORITHM Problem_1_S_1
+ALGORITHM Problem_1_S_2
 VAR
  set1 : ARRAY_OF INTEGER[];
  set2 : ARRAY_OF INTEGER[];
  sum : INTEGER := 0;
+ count:INTEGER:=1;
  i,j:INTEGER;
+ htabset1:HASH_TABLE<INTEGER ,INTEGER>
+ htabset2:HASH_TABLE<INTEGER ,INTEGER>
 
 BEGIN
 
@@ -11,20 +14,36 @@ BEGIN
  Read(set1);
  Write("Give the elements of set2");
  Read(set2);
+
  FOR i FROM 0 TO set1.length-1 STEP 1  DO
-    FOR j FROM 0 TO set2.length-1 STEP 1  DO
-        IF (set1[i]<>set2[j] and j=set2.length-1) THEN
-            sum:= sum + set1[i];
-        END_IF
-    END_FOR
+    htabset1.insert(set1[i],count);
  END_FOR
+ 
  FOR j FROM 0 TO set2.length-1 STEP 1  DO
-    FOR i FROM 0 TO set1.length-1 STEP 1  DO
-        IF (set1[i]<>set2[j] and i=set1.length-1) THEN
-            sum:= sum + set2[i];
-        END_IF
-    END_FOR
+    htabset2.insert(set2[j],count);
+    IF (htabset1.lookup(set2[j])= TRUE) THEN
+        htabset2.insert(set2[j],count+1)
+    END_IF
  END_FOR
+ 
+ FOR i FROM 0 TO set1.length-1 STEP 1  DO
+    IF (htabset2.lookup(set1[i])= TRUE) THEN
+        htabset1.insert(set1[i],count+1)
+    END_IF
+ END_FOR
+ 
+  FOR i FROM 0 TO set1.length-1 STEP 1  DO
+    IF (htabset1.get(set1[i])=1) THEN
+        sum:=sum+set1[i];
+    END_IF
+ END_FOR
+ 
+ FOR j FROM 0 TO set2.length-1 STEP 1  DO
+    IF (htabset2.get(set2[i])=1) THEN
+        sum:=sum+set2[i];
+    END_IF
+  END_FOR
+  
  Write("The sum of all elements which are present in either of the given set:=" sum);
 
 END
